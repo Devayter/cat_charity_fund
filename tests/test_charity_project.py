@@ -566,7 +566,7 @@ def test_patch_charity_project_fully_invested(
 ):
     response = superuser_client.patch(
         PROJECT_DETAILS_URL.format(project_id=small_fully_charity_project.id),
-        json={'full_amount': 10}
+        json={"full_amount": 10}
     )
     common_message_part = (
         'При попытке суперпользователя обновить проект, который был '
