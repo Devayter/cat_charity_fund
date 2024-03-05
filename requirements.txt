@@ -1,7 +1,7 @@
 aiosqlite==0.19.0
 alembic==1.13.1
 annotated-types==0.6.0
-anyio==4.2.0
+anyio==3.7.1
 asgiref==3.5.2
 attrs==21.4.0
 bcrypt==4.1.2
