@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.validators import (
-    check_fully_invested_status, check_charityproject_exists,
+    check_charityproject_exists, check_fully_invested_status,
     check_invested_before_delete, check_name_duplicate, check_new_full_amount
 )
 from app.core.db import get_async_session
@@ -50,7 +50,7 @@ async def create_charityproject(
 
     Создать новый благотворительный проект.
     """
-    await check_name_duplicate(charityproject.name, session)  # type: ignore
+    await check_name_duplicate(charityproject.name, session)
     charityproject = await charityproject_crud.create(charityproject, session)
     await investing(session)
     return charityproject

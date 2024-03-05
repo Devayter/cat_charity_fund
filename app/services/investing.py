@@ -24,10 +24,10 @@ async def investing(
     if not charityproject or not donation:
         return
     charityproject_invested_left = (
-        charityproject.full_amount - charityproject.invested_amount  
+        charityproject.full_amount - charityproject.invested_amount
     )
     donation_invested_left = (
-        donation.full_amount - donation.invested_amount  
+        donation.full_amount - donation.invested_amount
     )
 
     if charityproject_invested_left <= donation_invested_left:

@@ -1,13 +1,12 @@
+from http import HTTPStatus
 from typing import Optional
 
 from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
-from http import HTTPStatus
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.user import User
-
 
 FORBIDDEN_FIELDS = (
     'invested_amount', 'fully_invested', 'create_date', 'close_date'
@@ -27,12 +26,6 @@ class CRUDBase:
         user: Optional[User] = None
     ):
         obj_in_data = obj_in.model_dump()
-        # for field in obj_in.model_dump(exclude_unset=True):
-        #     if field in FORBIDDEN_FIELDS:
-        #         raise HTTPException(
-        #             detail=EDIT_FIELD_ERROR.format(field=field),
-        #             status_code=HTTPStatus.UNPROCESSABLE_ENTITY
-        #         )
         if user:
             obj_in_data['user_id'] = user.id
 
@@ -67,12 +60,12 @@ class CRUDBase:
     ):
         obj_data = jsonable_encoder(db_obj)
         update_data = obj_in.model_dump(exclude_unset=True)
-        # for field in update_data:
-        #     if field in FORBIDDEN_FIELDS:
-        #         raise HTTPException(
-        #             detail=EDIT_FIELD_ERROR.format(field=field),
-        #             status_code=HTTPStatus.UNPROCESSABLE_ENTITY
-        #         )
+        for field in update_data:
+            if field in FORBIDDEN_FIELDS:
+                raise HTTPException(
+                    detail=EDIT_FIELD_ERROR.format(field=field),
+                    status_code=HTTPStatus.UNPROCESSABLE_ENTITY
+                )
         for field in obj_data:
             if field in update_data:
                 setattr(db_obj, field, update_data[field])

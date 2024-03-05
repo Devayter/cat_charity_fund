@@ -1,10 +1,11 @@
-from fastapi import HTTPException
 from http import HTTPStatus
+
+from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.charity_project import CharityProject
 from app.crud.charity_project import charityproject_crud
+from app.models.charity_project import CharityProject
 
 
 CHARITYPROJECT_NOT_FOUND = 'Благотворительный проект не найден'
@@ -20,8 +21,8 @@ PROJECT_HAS_ALREADY_CLOSED = 'Данный проект уже закрыт'
 
 
 async def check_fully_invested_status(
-        charityproject_id: int,
-        session: AsyncSession
+    charityproject_id: int,
+    session: AsyncSession
 ) -> None:
     charityproject = await charityproject_crud.get(charityproject_id, session)
     if charityproject.fully_invested is True:
@@ -32,8 +33,8 @@ async def check_fully_invested_status(
 
 
 async def check_charityproject_exists(
-        charityproject_id: int,
-        session: AsyncSession
+    charityproject_id: int,
+    session: AsyncSession
 ) -> CharityProject:
     charityproject = await charityproject_crud.get(charityproject_id, session)
     if not charityproject:
@@ -62,9 +63,9 @@ async def check_name_duplicate(
 
 
 async def check_new_full_amount(
-        charityproject_full_amount: int,
-        charityproject_id: int,
-        session: AsyncSession
+    charityproject_full_amount: int,
+    charityproject_id: int,
+    session: AsyncSession
 ) -> None:
     charityproject = await charityproject_crud.get(charityproject_id, session)
     if charityproject_full_amount < charityproject.invested_amount:
@@ -77,8 +78,8 @@ async def check_new_full_amount(
 
 
 async def check_invested_before_delete(
-        charityproject: CharityProject,
-        session: AsyncSession
+    charityproject: CharityProject,
+    session: AsyncSession
 ) -> None:
     if charityproject.invested_amount > 0:
         raise HTTPException(

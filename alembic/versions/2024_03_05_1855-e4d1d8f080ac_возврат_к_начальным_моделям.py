@@ -1,19 +1,19 @@
-"""Правка модели юзера
+"""Возврат к начальным моделям
 
-Revision ID: 41c93378bbd7
-Revises: ffd558b056a9
-Create Date: 2024-02-27 20:42:54.910498
+Revision ID: e4d1d8f080ac
+Revises: e9deb1e563b7
+Create Date: 2024-03-05 18:55:44.107652
 
 """
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
 
+from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = '41c93378bbd7'
-down_revision: Union[str, None] = 'ffd558b056a9'
+revision: str = 'e4d1d8f080ac'
+down_revision: Union[str, None] = 'e9deb1e563b7'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
