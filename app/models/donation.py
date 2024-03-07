@@ -22,11 +22,9 @@ class Donation(CharityDonation):
     def __repr__(self):
         comment = self.comment if self.comment else '-'
         return (
-            f'{super().__repr__()}'
-            f'{
-                DONATION_REPRESENTATION.format(
-                    user_id=self.user_id,
-                    comment=comment
-                )
-            }'
+            super().__repr__() +
+            DONATION_REPRESENTATION.format(
+                user_id=self.user_id,
+                comment=comment
+            )
         )

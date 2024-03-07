@@ -15,11 +15,9 @@ class CharityProject(CharityDonation):
 
     def __repr__(self):
         return (
-            f'{super().__repr__()}'
-            f'{
-                CHARITYPROJECT_REPRESENTATION.format(
-                    name=self.name,
-                    description=self.description
-                )
-            }'
+            super().__repr__() +
+            CHARITYPROJECT_REPRESENTATION.format(
+                name=self.name,
+                description=self.description
+            )
         )
