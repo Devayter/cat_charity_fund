@@ -8,6 +8,7 @@ from app.api.validators import (
 from app.core.db import get_async_session
 from app.core.user import current_superuser
 from app.crud.charity_project import charityproject_crud
+from app.crud.donation import donation_crud
 from app.schemas.charity_project import (
     CharityProjectCreate, CharityProjectDB, CharityProjectUpdate
 )
@@ -51,8 +52,18 @@ async def create_charityproject(
     Создать новый благотворительный проект.
     """
     await check_name_duplicate(charityproject.name, session)
-    charityproject = await charityproject_crud.create(charityproject, session)
-    await investing(session)
+    if source := await donation_crud.get_opened(session):
+        charityproject = await charityproject_crud.create(
+            charityproject, session, need_investing=True
+        )
+        source = investing(charityproject, source)  # type: ignore
+        await session.commit()
+        await session.refresh(charityproject)
+        await session.refresh(source)
+    else:
+        charityproject = await charityproject_crud.create(
+            charityproject, session
+        )
     return charityproject
 
 
@@ -111,6 +122,6 @@ async def remove_charityproject(
     charityproject = await check_charityproject_exists(
         project_id, session
     )
-    await check_invested_before_delete(charityproject, session)
+    check_invested_before_delete(charityproject)
     charityproject = await charityproject_crud.remove(charityproject, session)
     return charityproject

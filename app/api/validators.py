@@ -77,9 +77,8 @@ async def check_new_full_amount(
         charityproject.fully_invested = True
 
 
-async def check_invested_before_delete(
-    charityproject: CharityProject,
-    session: AsyncSession
+def check_invested_before_delete(
+    charityproject: CharityProject
 ) -> None:
     if charityproject.invested_amount > 0:
         raise HTTPException(

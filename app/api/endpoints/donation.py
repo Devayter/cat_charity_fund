@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import get_async_session
 from app.core.user import current_superuser, current_user
+from app.crud.charity_project import charityproject_crud
 from app.crud.donation import donation_crud
 from app.models.user import User
 from app.schemas.donation import (
@@ -66,8 +67,16 @@ async def create_donation(
 
     Сделать пожертвование.
     """
-    donation = await donation_crud.create(
-        donation, session, user
-    )
-    await investing(session)
+    if source := await charityproject_crud.get_opened(session):
+        donation = await donation_crud.create(
+            donation, session, user, need_investing=True
+        )
+        source = investing(donation, source)  # type: ignore
+        await session.commit()
+        await session.refresh(donation)
+        await session.refresh(source)
+    else:
+        donation = await donation_crud.create(
+            donation, session, user
+        )
     return donation

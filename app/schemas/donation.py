@@ -8,7 +8,7 @@ from app.schemas.schemas_examples import DONATION_SCHEMA_EXAMPLE
 
 
 class DonationBase(CharityProjectDonationBase):
-    comment: Optional[str] = Field(None, min_length=1, max_length=200)
+    comment: Optional[str] = Field(None, max_length=200)
 
 
 class DonationCreate(DonationBase):

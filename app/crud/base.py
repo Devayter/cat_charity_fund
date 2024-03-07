@@ -3,7 +3,7 @@ from typing import Optional
 
 from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
-from sqlalchemy import select
+from sqlalchemy import not_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.user import User
@@ -23,16 +23,17 @@ class CRUDBase:
         self,
         obj_in,
         session: AsyncSession,
-        user: Optional[User] = None
+        user: Optional[User] = None,
+        need_investing: bool = False
     ):
         obj_in_data = obj_in.model_dump()
         if user:
             obj_in_data['user_id'] = user.id
-
         db_obj = self.model(**obj_in_data)
         session.add(db_obj)
-        await session.commit()
-        await session.refresh(db_obj)
+        if need_investing is False:
+            await session.commit()
+            await session.refresh(db_obj)
         return db_obj
 
     async def get(
@@ -44,6 +45,18 @@ class CRUDBase:
             select(self.model).where(self.model.id == obj_id)
         )
         return db_obj.scalars().first()
+
+    async def get_opened(
+        self,
+        session: AsyncSession
+    ):
+        source = await session.execute(
+            select(self.model).where(
+                not_(self.model.fully_invested)
+            )
+        )
+        source = source.scalars().first()  # type: ignore
+        return source
 
     async def get_multi(
         self,

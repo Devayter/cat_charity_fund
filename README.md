@@ -48,17 +48,7 @@ python3 -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### Для применения имеющихся миграций
-
-```bash
-alembic upgrade head
-```
-
-### Для создания новых миграций
-
-```bash
-alembic revision --autogenerate -m "Первая миграция"
-```
+### Для применения миграций
 
 ```bash
 alembic upgrade head
@@ -156,9 +146,13 @@ http://127.0.0.1:8000/auth/register
 }
 ```
 
-## Ссылка на полную документацию
+## Ссылка на полную документацию ReDoc
 
-[Redoc](http://127.0.0.1:8000/redoc)
+[ReDoc](http://127.0.0.1:8000/redoc)
+
+## Ссылка на полную документацию Swagger
+
+[Swagger](http://127.0.0.1:8000/docs)
 
 ## Авторы
 

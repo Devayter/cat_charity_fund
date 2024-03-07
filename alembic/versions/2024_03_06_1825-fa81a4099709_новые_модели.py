@@ -1,18 +1,18 @@
-"""Новая БД
+"""Новые модели
 
-Revision ID: e9deb1e563b7
+Revision ID: fa81a4099709
 Revises: 
-Create Date: 2024-03-05 18:50:43.539167
+Create Date: 2024-03-06 18:25:55.113395
 
 """
 from typing import Sequence, Union
 
+from alembic import op
 import sqlalchemy as sa
 
-from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = 'e9deb1e563b7'
+revision: str = 'fa81a4099709'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -29,6 +29,8 @@ def upgrade() -> None:
     sa.Column('create_date', sa.DateTime(), nullable=True),
     sa.Column('close_date', sa.DateTime(), nullable=True),
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.CheckConstraint('full_amount > 0'),
+    sa.CheckConstraint('full_amount >= invested_amount'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user',
@@ -52,6 +54,8 @@ def upgrade() -> None:
     sa.Column('create_date', sa.DateTime(), nullable=True),
     sa.Column('close_date', sa.DateTime(), nullable=True),
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.CheckConstraint('full_amount > 0'),
+    sa.CheckConstraint('full_amount >= invested_amount'),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], name='fk_donation_user_id_user'),
     sa.PrimaryKeyConstraint('id')
     )

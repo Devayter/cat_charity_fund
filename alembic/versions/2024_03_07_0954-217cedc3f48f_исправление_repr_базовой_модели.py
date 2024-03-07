@@ -1,19 +1,19 @@
-"""Возврат к начальным моделям
+"""Исправление repr базовой модели
 
-Revision ID: e4d1d8f080ac
-Revises: e9deb1e563b7
-Create Date: 2024-03-05 18:55:44.107652
+Revision ID: 217cedc3f48f
+Revises: fa81a4099709
+Create Date: 2024-03-07 09:54:28.289263
 
 """
 from typing import Sequence, Union
 
+from alembic import op
 import sqlalchemy as sa
 
-from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = 'e4d1d8f080ac'
-down_revision: Union[str, None] = 'e9deb1e563b7'
+revision: str = '217cedc3f48f'
+down_revision: Union[str, None] = 'fa81a4099709'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
