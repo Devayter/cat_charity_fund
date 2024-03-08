@@ -67,16 +67,12 @@ async def create_donation(
 
     Сделать пожертвование.
     """
-    if source := await charityproject_crud.get_opened(session):
-        donation = await donation_crud.create(
-            donation, session, user, need_investing=True
-        )
-        source = investing(donation, source)  # type: ignore
-        await session.commit()
-        await session.refresh(donation)
-        await session.refresh(source)
-    else:
-        donation = await donation_crud.create(
-            donation, session, user
-        )
+    if sources := await charityproject_crud.get_opened(session):
+        sources = investing(donation, sources)  # type: ignore
+        session.add_all(sources)
+    donation = await donation_crud.create(
+        donation, session, user, need_commit=False
+    )
+    await session.commit()
+    await session.refresh(donation)
     return donation

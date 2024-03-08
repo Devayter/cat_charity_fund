@@ -24,14 +24,14 @@ class CRUDBase:
         obj_in,
         session: AsyncSession,
         user: Optional[User] = None,
-        need_investing: bool = False
+        need_commit: bool = True
     ):
         obj_in_data = obj_in.model_dump()
         if user:
             obj_in_data['user_id'] = user.id
         db_obj = self.model(**obj_in_data)
         session.add(db_obj)
-        if need_investing is False:
+        if need_commit:
             await session.commit()
             await session.refresh(db_obj)
         return db_obj
@@ -50,13 +50,12 @@ class CRUDBase:
         self,
         session: AsyncSession
     ):
-        source = await session.execute(
+        opened_objects = await session.execute(
             select(self.model).where(
                 not_(self.model.fully_invested)
             )
         )
-        source = source.scalars().first()  # type: ignore
-        return source
+        return opened_objects.scalars().all()
 
     async def get_multi(
         self,
