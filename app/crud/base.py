@@ -41,19 +41,23 @@ class CRUDBase:
         obj_id: int,
         session: AsyncSession
     ):
-        return (await session.execute(
-            select(self.model).where(self.model.id == obj_id)
-        )).scalars().first()
+        return (
+            await session.execute(
+                select(self.model).where(self.model.id == obj_id)
+            )
+        ).scalars().first()
 
     async def get_opened(
         self,
         session: AsyncSession
     ):
-        return (await session.execute(
-            select(self.model).where(
-                not_(self.model.fully_invested)
+        return (
+            await session.execute(
+                select(self.model).where(
+                    not_(self.model.fully_invested)
+                )
             )
-        )).scalars().all()
+        ).scalars().all()
 
     async def get_multi(
         self,
