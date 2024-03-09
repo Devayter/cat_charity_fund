@@ -58,7 +58,7 @@ async def get_my_donations(
     response_model_exclude_none=True
 )
 async def create_donation(
-    donation: DonationCreate,
+    obj_in: DonationCreate,
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_user)
 ):
@@ -68,10 +68,10 @@ async def create_donation(
     Сделать пожертвование.
     """
     if sources := await charityproject_crud.get_opened(session):
-        sources = investing(donation, sources)  # type: ignore
+        sources = investing(obj_in, sources)  # type: ignore
         session.add_all(sources)
     donation = await donation_crud.create(
-        donation, session, user, need_commit=False
+        obj_in, session, user, need_commit=False
     )
     await session.commit()
     await session.refresh(donation)

@@ -43,7 +43,7 @@ async def get_all_charityprojects(
     response_model_exclude_unset=True
 )
 async def create_charityproject(
-    charityproject: CharityProjectCreate,
+    obj_in: CharityProjectCreate,
     session: AsyncSession = Depends(get_async_session)
 ):
     """
@@ -51,12 +51,12 @@ async def create_charityproject(
 
     Создать новый благотворительный проект.
     """
-    await check_name_duplicate(charityproject.name, session)
+    await check_name_duplicate(obj_in.name, session)
     if sources := await donation_crud.get_opened(session):
-        sources = investing(charityproject, sources)  # type: ignore
-        session.add_all(sources)
+        changed_sources = investing(obj_in, sources)  # type: ignore
+        session.add_all(changed_sources)
     charityproject = await charityproject_crud.create(
-        charityproject, session, need_commit=False
+        obj_in, session, need_commit=False
     )
     await session.commit()
     await session.refresh(charityproject)
