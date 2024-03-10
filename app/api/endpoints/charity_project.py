@@ -52,12 +52,12 @@ async def create_charityproject(
     Создать новый благотворительный проект.
     """
     await check_name_duplicate(obj_in.name, session)
-    if sources := await donation_crud.get_opened(session):
-        changed_sources = investing(obj_in, sources)  # type: ignore
-        session.add_all(changed_sources)
     charityproject = await charityproject_crud.create(
         obj_in, session, need_commit=False
     )
+    if sources := await donation_crud.get_opened(session):
+        changed_sources = investing(charityproject, sources)  # type: ignore
+        session.add_all(changed_sources)
     await session.commit()
     await session.refresh(charityproject)
     return charityproject
