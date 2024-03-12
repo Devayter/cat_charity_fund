@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import get_async_session
 from app.core.user import current_superuser, current_user
-from app.crud.charity_project import charityproject_crud
+from app.crud.charity_project import charity_project_crud
 from app.crud.donation import donation_crud
 from app.models.user import User
 from app.schemas.donation import (
@@ -29,8 +29,7 @@ async def get_all_donations(
 
     Возвращает список всех пожертвований.
     """
-    donations = await donation_crud.get_multi(session)
-    return donations
+    return await donation_crud.get_multi(session)
 
 
 @router.get(
@@ -48,8 +47,7 @@ async def get_my_donations(
 
     Возвращает список пожерствований авторизованного пользователя.
     """
-    donations = await donation_crud.get_by_user(session, user)
-    return donations
+    return await donation_crud.get_by_user(session, user)
 
 
 @router.post(
@@ -70,9 +68,9 @@ async def create_donation(
     donation = await donation_crud.create(
         obj_in, session, user, need_commit=False
     )
-    if sources := await charityproject_crud.get_opened(session):
-        sources = investing(donation, sources)  # type: ignore
-        session.add_all(sources)
+    session.add_all(
+        investing(donation, await charity_project_crud.get_opened(session))
+    )
     await session.commit()
     await session.refresh(donation)
     return donation

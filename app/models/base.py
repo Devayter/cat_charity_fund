@@ -1,6 +1,7 @@
 from datetime import datetime
 
-from sqlalchemy import Boolean, CheckConstraint, Column, DateTime, Integer
+from sqlalchemy import CheckConstraint
+from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.db import Base
 
@@ -20,11 +21,11 @@ class CharityDonation(Base):
         CheckConstraint('full_amount >= invested_amount'),
         CheckConstraint('invested_amount >= 0')
     )
-    full_amount = Column(Integer)
-    invested_amount = Column(Integer, default=0)
-    fully_invested = Column(Boolean, default=False)
-    create_date = Column(DateTime, default=datetime.now)
-    close_date = Column(DateTime)
+    full_amount: Mapped[int]
+    invested_amount: Mapped[int] = mapped_column(default=0)
+    fully_invested: Mapped[bool] = mapped_column(default=False)
+    create_date: Mapped[datetime] = mapped_column(default=datetime.now)
+    close_date: Mapped[datetime] = mapped_column(nullable=True)
 
     def __repr__(self):
         close_date = self.close_date if self.close_date else '-'
